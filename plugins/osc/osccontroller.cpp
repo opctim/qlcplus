@@ -233,9 +233,10 @@ quint16 OSCController::getHash(QString path)
         QByteArray bytes = path.toUtf8();
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        hash = qChecksum(bytes.constData(), static_cast<uint>(bytes.size()));
+        hash = qChecksum(bytes.constData(), bytes.size());
 #else
-        hash = qChecksum(QByteArrayView(bytes));
+        QByteArrayView bav(bytes);
+        hash = qChecksum(bav);
 #endif
         m_hashMap[path] = hash;
     }
