@@ -249,11 +249,15 @@ void ConfigureOSC::accept()
 
 void ConfigureOSC::slotOSCPathChanged(QString path)
 {
+    QByteArray bytes = path.toUtf8();
+
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    m_chNumSpin->setValue(qChecksum(path.toUtf8().data(), path.length()));
+    // qChecksum(const char*, uint) in Qt5 → cast to silence sign-conversion warnings
+    m_chNumSpin->setValue(qChecksum(bytes.constData(),
+                                    static_cast<uint>(bytes.size())));
 #else
-    QByteArrayView bav(path.toUtf8().data(), path.length());
-    m_chNumSpin->setValue(qChecksum(bav));
+    // Qt6 overload takes QByteArrayView
+    m_chNumSpin->setValue(qChecksum(QByteArrayView(bytes)));
 #endif
 
 }

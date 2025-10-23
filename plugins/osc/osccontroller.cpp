@@ -230,11 +230,12 @@ quint16 OSCController::getHash(QString path)
     else
     {
         /** No existing hash found. Add a new key to the table */
+        QByteArray bytes = path.toUtf8();
+
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        hash = qChecksum(path.toUtf8().data(), path.length());
+        hash = qChecksum(bytes.constData(), static_cast<uint>(bytes.size()));
 #else
-        QByteArrayView bav(path.toUtf8().data(), path.length());
-        hash = qChecksum(bav);
+        hash = qChecksum(QByteArrayView(bytes));
 #endif
         m_hashMap[path] = hash;
     }
