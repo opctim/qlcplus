@@ -254,8 +254,7 @@ void ConfigureOSC::slotOSCPathChanged(QString path)
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     m_chNumSpin->setValue(qChecksum(bytes.constData(), bytes.size()));
 #else
-    QByteArrayView bav(bytes);
-    m_chNumSpin->setValue(qChecksum(bav));
+    m_chNumSpin->setValue(qChecksum(QByteArrayView(bytes), Qt::ChecksumIso3309));
 #endif
 
 }

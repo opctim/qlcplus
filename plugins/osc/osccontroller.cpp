@@ -235,8 +235,7 @@ quint16 OSCController::getHash(QString path)
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         hash = qChecksum(bytes.constData(), bytes.size());
 #else
-        QByteArrayView bav(bytes);
-        hash = qChecksum(bav);
+        hash = qChecksum(QByteArrayView(bytes), Qt::ChecksumIso3309);
 #endif
         m_hashMap[path] = hash;
     }
