@@ -18,6 +18,7 @@
 */
 
 #include "osccontroller.h"
+#include "oscutil.h"
 
 #include <QMutexLocker>
 #include <QByteArray>
@@ -230,13 +231,9 @@ quint16 OSCController::getHash(QString path)
     else
     {
         /** No existing hash found. Add a new key to the table */
-        QByteArray bytes = path.toUtf8();
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        hash = qChecksum(bytes.constData(), bytes.size());
-#else
-        hash = qChecksum(QByteArrayView(bytes), Qt::ChecksumIso3309);
-#endif
+        hash = OSCUtil::crcIso3309(path);
+
         m_hashMap[path] = hash;
     }
 

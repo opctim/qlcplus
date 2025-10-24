@@ -28,6 +28,7 @@
 
 #include "configureosc.h"
 #include "oscplugin.h"
+#include "oscutil.h"
 
 #define KMapColumnInterface     0
 #define KMapColumnUniverse      1
@@ -249,14 +250,7 @@ void ConfigureOSC::accept()
 
 void ConfigureOSC::slotOSCPathChanged(QString path)
 {
-    QByteArray bytes = path.toUtf8();
-
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    m_chNumSpin->setValue(qChecksum(bytes.constData(), bytes.size()));
-#else
-    m_chNumSpin->setValue(qChecksum(QByteArrayView(bytes), Qt::ChecksumIso3309));
-#endif
-
+    m_chNumSpin->setValue(OSCUtil::crcIso3309(path));
 }
 
 int ConfigureOSC::exec()
